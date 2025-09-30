@@ -1,6 +1,7 @@
 import {
   guardarProductoService,
   obtenerProductosService,
+  obtenerTodosLosProductosService,
   modificarProductoPorIdService,
   eliminarProductoService
 } from "../services/productos.services.js";
@@ -24,6 +25,20 @@ export const obtenerProductos = async (req, res) => {
   try {
     const productos = await obtenerProductosService(req.userId);
     res.json(productos);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Consulta pública - todos los productos
+export const obtenerTodosLosProductos = async (req, res) => {
+  try {
+    const productos = await obtenerTodosLosProductosService();
+    res.json({
+      message: "Productos públicos",
+      total: productos.length,
+      productos: productos
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -40,6 +40,9 @@ https://obligatorio-fs-five.vercel.app
 - `POST /v1/auth/register` - Registro de usuario
 - `POST /v1/auth/login` - Inicio de sesión
 
+#### Consultas públicas:
+- `GET /v1/productos/publicos` - Listar todos los productos de todos los usuarios
+
 #### Protegidos (requieren token JWT):
 - `GET /v1/categorias` - Listar categorías
 - `GET /v1/categorias/:id` - Obtener categoría por ID
@@ -78,6 +81,11 @@ Content-Type: application/json
 ```bash
 GET https://obligatorio-fs-five.vercel.app/v1/categorias
 Authorization: Bearer tu_token_jwt_aqui
+```
+
+4. **Consultar productos públicos (sin autenticación):**
+```bash
+GET https://obligatorio-fs-five.vercel.app/v1/productos/publicos
 ```
 
 ## 🛠️ Desarrollo local

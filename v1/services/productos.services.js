@@ -33,6 +33,15 @@ export const obtenerProductosService = async (userId) => {
   return productos;
 };
 
+// ✅ Obtener todos los productos públicamente (sin autenticación)
+export const obtenerTodosLosProductosService = async () => {
+  const productos = await Producto.find()
+    .populate("categoria", "nombre descripcion")
+    .populate("usuario", "username nombre")
+    .sort({ createdAt: -1 }); // Ordenar por más recientes primero
+  return productos;
+};
+
 // ✅ Modificar
 export const modificarProductoPorIdService = async (id, datosNuevos) => {
   const productoModificado = await Producto.findByIdAndUpdate(id, datosNuevos, { new: true });

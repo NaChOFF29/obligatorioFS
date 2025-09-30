@@ -17,6 +17,7 @@ router.get("/", (req, res) => {
 
 // Rutas públicas
 router.use("/auth", authRoutes);
+router.use("/productos", productosRoutes); // Incluye tanto rutas públicas como protegidas
 
 // Rutas públicas de momento (productos/usuarios después pueden requerir auth)
 // router.use("/productos", productosRoutes);
@@ -26,7 +27,6 @@ router.use("/auth", authRoutes);
 router.use(authenticate);
 
 router.use("/categorias", categoriasRoutes);
-router.use("/productos", productosRoutes);
 router.use("/usuarios", usuariosRoutes); // Si querés que algunas rutas de auth requieran token
 // Ejemplo: si tuvieras una ruta "snails" protegida
 // router.use("/snails", snailsRoutes);
