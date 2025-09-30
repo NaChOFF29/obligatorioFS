@@ -46,10 +46,10 @@ https://obligatorio-fs-five.vercel.app
 #### Protegidos (requieren token JWT):
 - `GET /v1/categorias` - Listar categorías
 - `GET /v1/categorias/:id` - Obtener categoría por ID
-- `GET /v1/productos` - Listar productos del usuario
+- `GET /v1/productos` - Listar productos del usuario autenticado
 - `POST /v1/productos` - Crear producto
-- `PUT /v1/productos/:id` - Modificar producto
-- `DELETE /v1/productos/:id` - Eliminar producto
+- `PUT /v1/productos/:id` - Modificar producto (solo el propietario)
+- `DELETE /v1/productos/:id` - Eliminar producto (solo el propietario)
 - `PATCH /v1/usuarios/cambio-plan` - Cambiar plan de usuario (de plus a premium)
 
 ### 🧪 Ejemplo de uso:

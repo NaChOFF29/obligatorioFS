@@ -43,13 +43,47 @@ export const obtenerTodosLosProductosService = async () => {
 };
 
 // ✅ Modificar
-export const modificarProductoPorIdService = async (id, datosNuevos) => {
-  const productoModificado = await Producto.findByIdAndUpdate(id, datosNuevos, { new: true });
+export const modificarProductoPorIdService = async (id, datosNuevos, userId) => {
+  // Buscar el producto primero
+  const producto = await Producto.findById(id);
+  if (!producto) {
+    const err = new Error("Producto no encontrado");
+    err.status = 404;
+    throw err;
+  }
+
+  // Verificar que el usuario sea el propietario
+  if (producto.usuario.toString() !== userId) {
+    const err = new Error("No tienes permisos para modificar este producto");
+    err.status = 403;
+    throw err;
+  }
+
+  // Actualizar el producto
+  const productoModificado = await Producto.findByIdAndUpdate(id, datosNuevos, { new: true })
+    .populate("categoria", "nombre")
+    .populate("usuario", "username nombre");
   return productoModificado;
 };
 
 // ✅ Eliminar
-export const eliminarProductoService = async (id) => {
+export const eliminarProductoService = async (id, userId) => {
+  // Buscar el producto primero
+  const producto = await Producto.findById(id);
+  if (!producto) {
+    const err = new Error("Producto no encontrado");
+    err.status = 404;
+    throw err;
+  }
+
+  // Verificar que el usuario sea el propietario
+  if (producto.usuario.toString() !== userId) {
+    const err = new Error("No tienes permisos para eliminar este producto");
+    err.status = 403;
+    throw err;
+  }
+
+  // Eliminar el producto
   const productoElim = await Producto.findByIdAndDelete(id);
   return productoElim;
 };

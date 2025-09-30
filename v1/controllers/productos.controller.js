@@ -47,21 +47,19 @@ export const obtenerTodosLosProductos = async (req, res) => {
 // Modificación
 export const modificarProducto = async (req, res) => {
   try {
-    const productoModificado = await modificarProductoPorIdService(req.params.id, req.body);
-    if (!productoModificado) return res.status(404).json({ error: "Producto no encontrado" });
+    const productoModificado = await modificarProductoPorIdService(req.params.id, req.body, req.userId);
     res.json(productoModificado);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(err.status || 500).json({ error: err.message });
   }
 };
 
 // Baja
 export const eliminarProducto = async (req, res) => {
   try {
-    const productoElim = await eliminarProductoService(req.params.id);
-    if (!productoElim) return res.status(404).json({ error: "Producto no encontrado" });
+    const productoElim = await eliminarProductoService(req.params.id, req.userId);
     res.json({ message: "Producto eliminado correctamente" });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(err.status || 500).json({ error: err.message });
   }
 };
