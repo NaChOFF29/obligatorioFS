@@ -16,7 +16,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // Montamos todas las rutas de v1
 app.use("/v1", v1Routes);
-
+app.get("/", (req, res) => {
+  res.json({ message: "Deploy a Vercel" });
+});
 // Middleware 404 (si querés podés armar un notFoundMiddleware.js)
 app.use((req, res, next) => {
   res.status(404).json({ error: "Ruta no encontrada" });
