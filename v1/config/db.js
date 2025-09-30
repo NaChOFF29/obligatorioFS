@@ -13,8 +13,6 @@ const connectDB = async () => {
             maxPoolSize: 10, // Máximo 10 conexiones en el pool
             serverSelectionTimeoutMS: 5000, // Tiempo para seleccionar servidor
             socketTimeoutMS: 45000, // Timeout de socket
-            bufferMaxEntries: 0, // Deshabilitar buffering
-            bufferCommands: false, // Deshabilitar buffering de comandos
         });
         
         console.log("Base de datos conectada");
