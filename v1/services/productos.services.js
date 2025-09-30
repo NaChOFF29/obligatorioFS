@@ -4,8 +4,8 @@ import Usuario from "../models/usuario.model.js";
 
 // ✅ Guardar producto
 export const guardarProductoService = async (nuevoProducto) => {
-  // Obtener el usuario para verificar su rol
-  const usuario = await Usuario.findById(nuevoProducto.usuario).populate('rol');
+  // Obtener el usuario para verificar su plan
+  const usuario = await Usuario.findById(nuevoProducto.usuario).populate('plan');
   if (!usuario) {
     const err = new Error("Usuario no encontrado");
     err.status = 404;
@@ -13,7 +13,7 @@ export const guardarProductoService = async (nuevoProducto) => {
   }
 
   // Si el usuario es "plus", verificar que no tenga más de 10 productos
-  if (usuario.rol.nombre === "plus") {
+  if (usuario.plan.nombre === "plus") {
     const cantidadProductos = await Producto.countDocuments({ usuario: nuevoProducto.usuario });
     if (cantidadProductos >= 10) {
       const err = new Error("Los usuarios Plus no pueden crear más de 10 productos");
@@ -36,8 +36,8 @@ export const obtenerProductosService = async (userId) => {
 // ✅ Obtener todos los productos públicamente (sin autenticación)
 export const obtenerTodosLosProductosService = async () => {
   const productos = await Producto.find()
-    .populate("categoria", "nombre descripcion")
-    .populate("usuario", "username nombre")
+    .populate("categoria", "nombre")
+    .populate("usuario", "nombre")
     .sort({ createdAt: -1 }); // Ordenar por más recientes primero
   return productos;
 };

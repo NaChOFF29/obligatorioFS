@@ -1,9 +1,9 @@
 import Usuario from "../models/usuario.model.js";
-import Rol from "../models/rol.model.js";
+import Plan from "../models/plan.model.js";
 
 export const cambioPlanService = async (userId) => {
-  // Poblar el rol para poder acceder a sus propiedades
-  const usuario = await Usuario.findById(userId).populate('rol');
+  // Poblar el plan para poder acceder a sus propiedades
+  const usuario = await Usuario.findById(userId).populate('plan');
   console.log("Usuario encontrado:", usuario);
   if (!usuario) {
     const err = new Error("Usuario no encontrado");
@@ -11,30 +11,30 @@ export const cambioPlanService = async (userId) => {
     throw err;
   }
 
-  // Verificar que el usuario tenga rol "plus"
-  if (usuario.rol.nombre !== "plus") { 
+  // Verificar que el usuario tenga plan "plus"
+  if (usuario.plan.nombre !== "plus") { 
     const err = new Error("Solo se puede cambiar de plus a premium");
     err.status = 400;
     throw err;
   }
 
-  // Buscar el rol premium en la base de datos
-  const rolPremium = await Rol.findOne({ nombre: "premium" });
-  if (!rolPremium) {
-    const err = new Error("Rol premium no encontrado");
+  // Buscar el plan premium en la base de datos
+  const planPremium = await Plan.findOne({ nombre: "premium" });
+  if (!planPremium) {
+    const err = new Error("Plan premium no encontrado");
     err.status = 500;
     throw err;
   }
 
-  // Asignar el ObjectId del rol premium
-  usuario.rol = rolPremium._id;
+  // Asignar el ObjectId del plan premium
+  usuario.plan = planPremium._id;
   await usuario.save();
   
-  // Poblar de nuevo para retornar el usuario con el rol actualizado
-  await usuario.populate('rol');
+  // Poblar de nuevo para retornar el usuario con el plan actualizado
+  await usuario.populate('plan');
   
   console.log("Usuario actualizado:", usuario); 
-  console.log("Nuevo rol del usuario:", usuario.rol.nombre);
+  console.log("Nuevo plan del usuario:", usuario.plan.nombre);
   return usuario;
   
 };

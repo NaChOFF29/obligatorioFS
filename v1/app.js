@@ -3,6 +3,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import v1Routes from "./index.js";
+import { notFoundMiddleware } from "./middlewares/notFoundMiddleware.js";
+import { errorMiddleware } from "./middlewares/errorMiddleware.js";
+import { handleSpecificErrors } from "./middlewares/handleSpecificErrors.js";
 
 dotenv.config();
 
@@ -25,19 +28,14 @@ app.get("/", (req, res) => {
   });
 });
 
-// Middleware 404 (si querés podés armar un notFoundMiddleware.js)
-app.use((req, res, next) => {
-  res.status(404).json({ error: "Ruta no encontrada" });
-});
+// Middleware 404 - debe ir después de todas las rutas
+app.use(notFoundMiddleware);
 
-// Middleware de error genérico
-app.use((err, req, res, next) => {
-  console.error("Error:", err);
-  res.status(err.status || 500).json({ 
-    error: err.message || "Error interno del servidor",
-    ...(process.env.NODE_ENV === "development" && { stack: err.stack })
-  });
-});
+// Middleware de manejo de errores específicos - antes del errorMiddleware general
+app.use(handleSpecificErrors);
+
+// Middleware de manejo de errores general - debe ir al final
+app.use(errorMiddleware);
 
 
 export default app;

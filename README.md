@@ -50,7 +50,7 @@ https://obligatorio-fs-five.vercel.app
 - `POST /v1/productos` - Crear producto
 - `PUT /v1/productos/:id` - Modificar producto
 - `DELETE /v1/productos/:id` - Eliminar producto
-- `PATCH /v1/usuarios/cambio-plan` - Cambiar plan de usuario
+- `PATCH /v1/usuarios/cambio-plan` - Cambiar plan de usuario (de plus a premium)
 
 ### 🧪 Ejemplo de uso:
 

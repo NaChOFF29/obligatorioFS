@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
-import Rol from "../models/rol.model.js";
+import Plan from "../models/plan.model.js";
 
 const usuarioSchema = new Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    rol: { type: Schema.Types.ObjectId, ref: "Rol", required: true, default:"68cea1869eb0f5acc29eb90a" },
+    plan: { type: Schema.Types.ObjectId, ref: "Plan", required: true, default:"68cea1869eb0f5acc29eb90a" },
     nombre: { type: String }
 })
 

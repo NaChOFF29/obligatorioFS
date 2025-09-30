@@ -5,7 +5,7 @@ export const cambioPlan = async (req, res) => {
     const updatedUser = await cambioPlanService(req.userId);
     res.json({
       message: "Plan actualizado correctamente",
-      plan: updatedUser.rol
+      plan: updatedUser.plan
     });
   } catch (err) {
     res.status(err.status || 500).json({ error: err.message });
