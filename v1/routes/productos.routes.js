@@ -7,6 +7,8 @@ import {
   eliminarProducto
 } from "../controllers/productos.controller.js";
 import { authenticate } from "../middlewares/auth.middleware.js";
+import { validateBody } from "../middlewares/validateBody.middleware.js";
+import { crearProductoSchema, actualizarProductoSchema, productoIdSchema } from "../validators/productos.validators.js";
 
 const router = express.Router();
 
@@ -17,9 +19,9 @@ router.get("/publicos", obtenerTodosLosProductos); // GET /productos/publicos
 router.use(authenticate);
 
 // Rutas protegidas (requieren autenticación)
-router.post("/", guardarProducto);       // alta
+router.post("/", validateBody(crearProductoSchema), guardarProducto);       // alta
 router.get("/", obtenerProductos);       // consulta del usuario autenticado
-router.patch("/:id", modificarProducto);   // modificación
-router.delete("/:id", eliminarProducto); // baja
+router.patch("/:id", validateBody(actualizarProductoSchema), modificarProducto);   // modificación
+router.delete("/:id", validateBody(productoIdSchema), eliminarProducto); // baja
 
 export default router;

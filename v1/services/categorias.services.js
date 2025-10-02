@@ -8,9 +8,4 @@ export const obtenerCategoriasService = async () => {
   return categorias;
 };
 
-// ✅ Obtener categoría por ID
-export const obtenerCategoriaPorIdService = async (id) => {
-  const categoria = await Categoria.findById(id);
-  return categoria;
-};
 
