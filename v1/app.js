@@ -6,6 +6,7 @@ import v1Routes from "./index.js";
 import { notFoundMiddleware } from "./middlewares/notFoundMiddleware.js";
 import { errorMiddleware } from "./middlewares/errorMiddleware.js";
 import { handleSpecificErrors } from "./middlewares/handleSpecificErrors.js";
+import rateLimit from "express-rate-limit";
 
 dotenv.config();
 
@@ -17,6 +18,22 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minuto
+  max: 5,                 // máximo 5 requests por IP
+  message: "Demasiadas peticiones, intente más tarde.",
+  handler: (req, res, next, options) => {
+    res.status(options.statusCode).json({
+      error: "Too many requests",
+      limit: options.max,
+      windowMs: options.windowMs,
+      retryAfter: Math.ceil(options.windowMs / 1000) + "s"
+    });
+  }
+});
+// Aplicar a toda la app
+app.use(limiter);
 
 // Montamos todas las rutas de v1
 app.use("/v1", v1Routes);

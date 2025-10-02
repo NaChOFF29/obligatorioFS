@@ -11,11 +11,11 @@ export const authenticate = (req, res, next) => {
     return res.status(401).json({ error: "No autorizado. Token inválido." });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) {
       return res.status(403).json({ error: "Token no válido." });
     }
-    req.userId = decoded.id; // guardamos el id del usuario
+    req.userId = user.id; // guardamos el id del usuario
     next();
   });
 };
