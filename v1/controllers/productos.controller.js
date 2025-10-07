@@ -24,7 +24,7 @@ export const guardarProducto = async (req, res) => {
 export const obtenerProductos = async (req, res) => {
   try {
     const productos = await obtenerProductosService(req.userId);
-    res.json(productos);
+    res.status(200).json(productos);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -34,7 +34,7 @@ export const obtenerProductos = async (req, res) => {
 export const obtenerTodosLosProductos = async (req, res) => {
   try {
     const productos = await obtenerTodosLosProductosService();
-    res.json({
+    res.status(201).json({
       message: "Productos públicos",
       total: productos.length,
       productos: productos
