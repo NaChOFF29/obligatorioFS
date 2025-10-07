@@ -50,14 +50,5 @@ export const registerSchema = Joi.object({
             'any.required': 'La confirmación de contraseña es requerida'
         }),
 
-      nombre: Joi.string()
-        .min(2)
-        .max(100)
-        .pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
-        .optional()
-        .messages({
-            'string.min': 'El nombre debe tener al menos 2 caracteres',
-            'string.max': 'El nombre no puede tener más de 100 caracteres',
-            'string.pattern.base': 'El nombre solo puede contener letras y espacios'
-        })
+
 });
