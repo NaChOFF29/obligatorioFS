@@ -115,11 +115,7 @@ export const actualizarProductoSchema = Joi.object({
             'number.min': 'El stock no puede ser negativo',
             'number.max': 'El stock máximo es 99,999'
         }),
-    activo: Joi.boolean()
-        .optional()
-        .messages({
-            'boolean.base': 'El campo activo debe ser verdadero o falso'
-        })
+    
 }).min(1).messages({
     'object.min': 'Debe proporcionar al menos un campo para actualizar'
 });

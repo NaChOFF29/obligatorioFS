@@ -43,7 +43,12 @@ export const registerSchema = Joi.object({
             'any.required': 'La contraseña es requerida'
         }),
     
-    confirmPassword: Joi.ref('password'),
+    confirmPassword: Joi.valid(Joi.ref('password'))
+        .required()
+        .messages({
+            'any.only': 'Las contraseñas no coinciden',
+            'any.required': 'La confirmación de contraseña es requerida'
+        }),
 
       nombre: Joi.string()
         .min(2)
