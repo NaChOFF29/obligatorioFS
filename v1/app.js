@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const limiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minuto
-  max: 5,                 // máximo 5 requests por IP
+  max: 20,                 // máximo 20 requests por IP
   message: "Demasiadas peticiones, intente más tarde.",
   handler: (req, res, next, options) => {
     res.status(options.statusCode).json({
