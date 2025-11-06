@@ -55,9 +55,6 @@ export const obtenerProductosService = async (userId, filtroFecha = null) => {
           const haceMes = new Date(ahora.getTime() - 30 * 24 * 60 * 60 * 1000);
           query.createdAt = { $gte: haceMes };
           break;
-        case 'historico':
-          // Sin filtro de fecha - todos los documentos
-          break;
         default:
           // Si el filtro no es válido, ignorar
           break;
@@ -92,9 +89,6 @@ export const obtenerTodosLosProductosService = async (filtroFecha = null) => {
         case 'mes':
           const haceMes = new Date(ahora.getTime() - 30 * 24 * 60 * 60 * 1000);
           query.createdAt = { $gte: haceMes };
-          break;
-        case 'historico':
-          // Sin filtro de fecha
           break;
       }
     }
@@ -169,53 +163,5 @@ export const eliminarProductoService = async (id, userId) => {
     }
     console.error('Error en eliminarProductoService:', error);
     throw new Error("Error al eliminar producto");
-  }
-};
-
-// ✅ Informe de uso - Información del usuario autenticado
-export const obtenerInformeUsoService = async (userId) => {
-  try {
-    // Obtener el usuario con su plan
-    const usuario = await Usuario.findById(userId).populate('plan');
-    if (!usuario) {
-      const err = new Error("Usuario no encontrado");
-      err.status = 404;
-      throw err;
-    }
-
-    // Contar productos del usuario
-    const cantidadProductos = await Producto.countDocuments({ usuario: userId });
-    
-    const planNombre = usuario.plan ? usuario.plan.nombre : 'sin-plan';
-    
-    // Construir respuesta según el tipo de plan
-    const informe = {
-      usuario: usuario.username,
-      plan: planNombre,
-      cantidadProductos: cantidadProductos
-    };
-
-    // Si es plan PLUS, agregar porcentaje de uso (límite de 10)
-    if (planNombre === 'plus') {
-      const limiteProductos = 10;
-      const porcentajeUso = ((cantidadProductos / limiteProductos) * 100).toFixed(2);
-      
-      informe.limiteProductos = limiteProductos;
-      informe.productosRestantes = Math.max(0, limiteProductos - cantidadProductos);
-      informe.porcentajeUso = `${porcentajeUso}%`;
-    }
-    
-    // Si es plan PREMIUM, solo mostrar cantidad (sin límite)
-    if (planNombre === 'premium') {
-      informe.mensaje = 'Plan premium: productos ilimitados';
-    }
-
-    return informe;
-  } catch (error) {
-    if (error.status) {
-      throw error;
-    }
-    console.error('Error en obtenerInformeUsoService:', error);
-    throw new Error("Error al obtener informe de uso");
   }
 };

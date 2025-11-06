@@ -3,8 +3,7 @@ import {
   obtenerProductosService,
   obtenerTodosLosProductosService,
   modificarProductoPorIdService,
-  eliminarProductoService,
-  obtenerInformeUsoService
+  eliminarProductoService
 } from "../services/productos.services.js";
 
 // Alta
@@ -67,16 +66,6 @@ export const eliminarProducto = async (req, res) => {
   try {
     const productoElim = await eliminarProductoService(req.params.id, req.userId);
     res.json({ message: "Producto eliminado correctamente" });
-  } catch (err) {
-    res.status(err.status || 500).json({ error: err.message });
-  }
-};
-
-// Informe de uso
-export const obtenerInformeUso = async (req, res) => {
-  try {
-    const informe = await obtenerInformeUsoService(req.userId);
-    res.status(200).json(informe);
   } catch (err) {
     res.status(err.status || 500).json({ error: err.message });
   }
