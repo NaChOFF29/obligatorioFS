@@ -20,9 +20,10 @@ router.get("/publicos", obtenerTodosLosProductos); // GET /productos/publicos
 router.use(authenticate);
 
 // Rutas protegidas (requieren autenticación)
-router.get("/informe-uso", obtenerInformeUso);  // informe de uso por plan
-router.post("/", validateBody(crearProductoSchema), guardarProducto);       // alta
+// IMPORTANTE: Rutas específicas ANTES de rutas con parámetros dinámicos
+router.get("/informe-uso", obtenerInformeUso);  // informe de uso por plan - DEBE IR PRIMERO
 router.get("/", obtenerProductos);       // consulta del usuario autenticado
+router.post("/", validateBody(crearProductoSchema), guardarProducto);       // alta
 router.patch("/:id", validateBody(actualizarProductoSchema), modificarProducto);   // modificación
 router.delete("/:id", validateBody(productoIdSchema), eliminarProducto); // baja
 
