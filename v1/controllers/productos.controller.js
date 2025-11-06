@@ -75,9 +75,9 @@ export const eliminarProducto = async (req, res) => {
 // Informe de uso
 export const obtenerInformeUso = async (req, res) => {
   try {
-    const informe = await obtenerInformeUsoService();
+    const informe = await obtenerInformeUsoService(req.userId);
     res.status(200).json(informe);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(err.status || 500).json({ error: err.message });
   }
 };

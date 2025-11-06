@@ -172,49 +172,49 @@ export const eliminarProductoService = async (id, userId) => {
   }
 };
 
-// ✅ Informe de uso - Cantidad de productos por plan
-export const obtenerInformeUsoService = async () => {
+// ✅ Informe de uso - Información del usuario autenticado
+export const obtenerInformeUsoService = async (userId) => {
   try {
-    // Obtener todos los usuarios con sus planes
-    const usuarios = await Usuario.find().populate('plan');
+    // Obtener el usuario con su plan
+    const usuario = await Usuario.findById(userId).populate('plan');
+    if (!usuario) {
+      const err = new Error("Usuario no encontrado");
+      err.status = 404;
+      throw err;
+    }
+
+    // Contar productos del usuario
+    const cantidadProductos = await Producto.countDocuments({ usuario: userId });
     
-    // Contar productos por plan
-    const informePorPlan = {};
-    let totalProductos = 0;
+    const planNombre = usuario.plan ? usuario.plan.nombre : 'sin-plan';
     
-    for (const usuario of usuarios) {
-      const planNombre = usuario.plan ? usuario.plan.nombre : 'sin-plan';
+    // Construir respuesta según el tipo de plan
+    const informe = {
+      usuario: usuario.username,
+      plan: planNombre,
+      cantidadProductos: cantidadProductos
+    };
+
+    // Si es plan PLUS, agregar porcentaje de uso (límite de 10)
+    if (planNombre === 'plus') {
+      const limiteProductos = 10;
+      const porcentajeUso = ((cantidadProductos / limiteProductos) * 100).toFixed(2);
       
-      // Contar productos de este usuario
-      const cantidadProductos = await Producto.countDocuments({ usuario: usuario._id });
-      
-      if (!informePorPlan[planNombre]) {
-        informePorPlan[planNombre] = {
-          plan: planNombre,
-          cantidadProductos: 0,
-          cantidadUsuarios: 0
-        };
-      }
-      
-      informePorPlan[planNombre].cantidadProductos += cantidadProductos;
-      informePorPlan[planNombre].cantidadUsuarios += 1;
-      totalProductos += cantidadProductos;
+      informe.limiteProductos = limiteProductos;
+      informe.productosRestantes = Math.max(0, limiteProductos - cantidadProductos);
+      informe.porcentajeUso = `${porcentajeUso}%`;
     }
     
-    // Calcular porcentajes
-    const informeConPorcentajes = Object.values(informePorPlan).map(item => ({
-      ...item,
-      porcentajeUso: totalProductos > 0 
-        ? ((item.cantidadProductos / totalProductos) * 100).toFixed(2) + '%'
-        : '0%'
-    }));
-    
-    return {
-      totalProductos,
-      totalUsuarios: usuarios.length,
-      informePorPlan: informeConPorcentajes
-    };
+    // Si es plan PREMIUM, solo mostrar cantidad (sin límite)
+    if (planNombre === 'premium') {
+      informe.mensaje = 'Plan premium: productos ilimitados';
+    }
+
+    return informe;
   } catch (error) {
+    if (error.status) {
+      throw error;
+    }
     console.error('Error en obtenerInformeUsoService:', error);
     throw new Error("Error al obtener informe de uso");
   }
