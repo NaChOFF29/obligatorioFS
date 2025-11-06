@@ -3,7 +3,8 @@ import {
   obtenerProductosService,
   obtenerTodosLosProductosService,
   modificarProductoPorIdService,
-  eliminarProductoService
+  eliminarProductoService,
+  obtenerInformeUsoService
 } from "../services/productos.services.js";
 
 // Alta
@@ -23,8 +24,13 @@ export const guardarProducto = async (req, res) => {
 // Consulta
 export const obtenerProductos = async (req, res) => {
   try {
-    const productos = await obtenerProductosService(req.userId);
-    res.status(201).json(productos);
+    const { fecha } = req.query; // Obtener parámetro de query
+    const productos = await obtenerProductosService(req.userId, fecha);
+    res.status(200).json({
+      filtro: fecha || 'todos',
+      total: productos.length,
+      productos: productos
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -33,9 +39,11 @@ export const obtenerProductos = async (req, res) => {
 // Consulta pública - todos los productos
 export const obtenerTodosLosProductos = async (req, res) => {
   try {
-    const productos = await obtenerTodosLosProductosService();
-    res.status(201).json({
+    const { fecha } = req.query; // Obtener parámetro de query
+    const productos = await obtenerTodosLosProductosService(fecha);
+    res.status(200).json({
       message: "Productos públicos",
+      filtro: fecha || 'todos',
       total: productos.length,
       productos: productos
     });
@@ -61,5 +69,15 @@ export const eliminarProducto = async (req, res) => {
     res.json({ message: "Producto eliminado correctamente" });
   } catch (err) {
     res.status(err.status || 500).json({ error: err.message });
+  }
+};
+
+// Informe de uso
+export const obtenerInformeUso = async (req, res) => {
+  try {
+    const informe = await obtenerInformeUsoService();
+    res.status(200).json(informe);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };

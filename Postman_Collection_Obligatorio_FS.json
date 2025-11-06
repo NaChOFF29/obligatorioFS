@@ -1,0 +1,895 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"name": "Obligatorio FS - API Tests Completo",
+		"description": "Colección completa con filtros por fecha e informe de uso",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "🔐 Autenticación",
+			"item": [
+				{
+					"name": "✅ Register - Exitoso",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"usuario1\",\n  \"password\": \"123456\",\n  \"confirmPassword\": \"123456\",\n  \"nombre\": \"Juan Pérez\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "❌ Register - Username corto",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"ab\",\n  \"password\": \"123456\",\n  \"confirmPassword\": \"123456\",\n  \"nombre\": \"Test User\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "❌ Register - Passwords no coinciden",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"usuario2\",\n  \"password\": \"123456\",\n  \"confirmPassword\": \"654321\",\n  \"nombre\": \"Test User\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅ Login - Exitoso",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('authToken', response.token);",
+									"    pm.test('Token guardado correctamente', function () {",
+									"        pm.expect(response.token).to.not.be.undefined;",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"usuario1\",\n  \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "❌ Login - Credenciales incorrectas",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"usuario1\",\n  \"password\": \"wrongpassword\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🏪 Productos Públicos (con filtros)",
+			"item": [
+				{
+					"name": "✅ Todos los productos públicos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos/publicos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos",
+								"publicos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅ Productos públicos - Última semana",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos/publicos?fecha=semana",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos",
+								"publicos"
+							],
+							"query": [
+								{
+									"key": "fecha",
+									"value": "semana",
+									"description": "Productos de los últimos 7 días"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅ Productos públicos - Último mes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos/publicos?fecha=mes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos",
+								"publicos"
+							],
+							"query": [
+								{
+									"key": "fecha",
+									"value": "mes",
+									"description": "Productos de los últimos 30 días"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅ Productos públicos - Histórico",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos/publicos?fecha=historico",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos",
+								"publicos"
+							],
+							"query": [
+								{
+									"key": "fecha",
+									"value": "historico",
+									"description": "Todos los productos históricos"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📊 Informe de Uso",
+			"item": [
+				{
+					"name": "✅ Obtener informe de uso",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos/informe-uso",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos",
+								"informe-uso"
+							]
+						},
+						"description": "Obtiene estadísticas de uso: cantidad de productos por plan, porcentajes y totales"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📦 Productos Autenticados",
+			"item": [
+				{
+					"name": "✅ Crear producto - Exitoso",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('productoId', response._id);",
+									"    pm.test('Producto creado y ID guardado', function () {",
+									"        pm.expect(response._id).to.not.be.undefined;",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Laptop Gaming\",\n  \"descripcion\": \"Laptop para gaming de alta gama con procesador Intel i7\",\n  \"precio\": 1299.99,\n  \"categoria\": \"507f1f77bcf86cd799439011\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "❌ Crear producto - Precio negativo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Producto Inválido\",\n  \"descripcion\": \"Un producto con precio negativo\",\n  \"precio\": -100,\n  \"categoria\": \"507f1f77bcf86cd799439011\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "❌ Crear producto - Categoría inválida",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Producto Test\",\n  \"descripcion\": \"Producto con categoría inválida\",\n  \"precio\": 99.99,\n  \"categoria\": \"invalid-category-id\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅ Obtener mis productos - Todos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅ Obtener mis productos - Última semana",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos?fecha=semana",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos"
+							],
+							"query": [
+								{
+									"key": "fecha",
+									"value": "semana",
+									"description": "Mis productos de los últimos 7 días"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅ Obtener mis productos - Último mes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos?fecha=mes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos"
+							],
+							"query": [
+								{
+									"key": "fecha",
+									"value": "mes",
+									"description": "Mis productos de los últimos 30 días"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅ Obtener mis productos - Histórico",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos?fecha=historico",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos"
+							],
+							"query": [
+								{
+									"key": "fecha",
+									"value": "historico",
+									"description": "Todos mis productos históricos"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅ Modificar mi producto",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Laptop Gaming Actualizada\",\n  \"precio\": 1199.99\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos/{{productoId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos",
+								"{{productoId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "❌ Modificar producto - ID inválido",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Producto Actualizado\",\n  \"precio\": 999.99\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos/invalid-id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos",
+								"invalid-id"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅ Eliminar mi producto",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos/{{productoId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos",
+								"{{productoId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "👥 Usuarios",
+			"item": [
+				{
+					"name": "✅ Cambio de plan",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"plan\": \"507f1f77bcf86cd799439012\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/usuarios/cambio-plan",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"usuarios",
+								"cambio-plan"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🏷️ Categorías",
+			"item": [
+				{
+					"name": "✅ Obtener categorías",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/categorias",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"categorias"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🚫 Tests de Seguridad",
+			"item": [
+				{
+					"name": "❌ Acceso sin token",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "❌ Token inválido",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer token-invalido-123"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "❌ Ruta inexistente - 404",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/ruta-que-no-existe",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"ruta-que-no-existe"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "⚡ Rate Limiting Tests",
+			"item": [
+				{
+					"name": "Test Rate Limit - Request 1",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos/publicos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos",
+								"publicos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Rate Limit - Request 2",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos/publicos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos",
+								"publicos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Rate Limit - Request 3",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos/publicos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos",
+								"publicos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Rate Limit - Request 4",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos/publicos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos",
+								"publicos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Rate Limit - Request 5",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos/publicos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos",
+								"publicos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "❌ Test Rate Limit - Request 6 (Debería fallar)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/productos/publicos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"productos",
+								"publicos"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}

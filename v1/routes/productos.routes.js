@@ -4,7 +4,8 @@ import {
   obtenerProductos,
   obtenerTodosLosProductos,
   modificarProducto,
-  eliminarProducto
+  eliminarProducto,
+  obtenerInformeUso
 } from "../controllers/productos.controller.js";
 import { authenticate } from "../middlewares/auth.middleware.js";
 import { validateBody } from "../middlewares/validateBody.middleware.js";
@@ -19,6 +20,7 @@ router.get("/publicos", obtenerTodosLosProductos); // GET /productos/publicos
 router.use(authenticate);
 
 // Rutas protegidas (requieren autenticación)
+router.get("/informe-uso", obtenerInformeUso);  // informe de uso por plan
 router.post("/", validateBody(crearProductoSchema), guardarProducto);       // alta
 router.get("/", obtenerProductos);       // consulta del usuario autenticado
 router.patch("/:id", validateBody(actualizarProductoSchema), modificarProducto);   // modificación
