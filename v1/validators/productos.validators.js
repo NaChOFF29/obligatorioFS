@@ -36,6 +36,13 @@ export const crearProductoSchema = Joi.object({
             'number.max': 'El precio máximo es 999,999.99',
             'any.required': 'El precio es requerido'
         }),
+    imagen: Joi.string()
+        .uri()
+        .allow(null, '')
+        .optional()
+        .messages({
+            'string.uri': 'La imagen debe ser una URL válida'
+        }),
     categoria: Joi.string()
         .hex()
         .length(24)
@@ -96,6 +103,13 @@ export const actualizarProductoSchema = Joi.object({
             'number.positive': 'El precio debe ser un número positivo',
             'number.min': 'El precio mínimo es 0.01',
             'number.max': 'El precio máximo es 999,999.99'
+        }),
+    imagen: Joi.string()
+        .uri()
+        .allow(null, '')
+        .optional()
+        .messages({
+            'string.uri': 'La imagen debe ser una URL válida'
         }),
     categoria: Joi.string()
         .hex()

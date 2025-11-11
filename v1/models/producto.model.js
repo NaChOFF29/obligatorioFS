@@ -5,6 +5,7 @@ const productoSchema = new Schema({
   nombre: { type: String, required: true },
   descripcion: { type: String },
   precio: { type: Number, required: true },
+  imagen: { type: String, default: null },
   categoria: { type: Schema.Types.ObjectId, ref: "Categoria", required: true },
   usuario: { type: Schema.Types.ObjectId, ref: "Usuario", required: true },
   createdAt: { type: Date, default: Date.now }
